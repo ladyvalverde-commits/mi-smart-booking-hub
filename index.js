@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const path = require("path");
 const express = require("express");
 const { createClient } = require("@supabase/supabase-js");
 
@@ -14,6 +15,7 @@ if (!supabase) {
 }
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
 // Código corto y fácil de dictar, ej. "SB-7K3QX9" (sin 0/O ni 1/I para evitar confusiones)
 const ALFABETO = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

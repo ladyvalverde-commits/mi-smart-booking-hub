@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smart Booking Hub</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Smart Booking Hub</h1>
+
+      <section>
+        <h2>Pedir una cita</h2>
+        <form id="form-crear">
+          <label>
+            Nombre
+            <input name="nombre" required />
+          </label>
+          <label>
+            Contacto (email o teléfono)
+            <input name="contacto" required />
+          </label>
+          <label>
+            Fecha y hora
+            <input name="fecha_hora" type="datetime-local" required />
+          </label>
+          <button type="submit">Enviar solicitud</button>
+        </form>
+        <div id="resultado-crear" class="resultado" hidden></div>
+      </section>
+
+      <section>
+        <h2>Consultar mi solicitud</h2>
+        <form id="form-consultar">
+          <label>
+            Código de seguimiento
+            <input name="codigo" placeholder="SB-XXXXXX" required />
+          </label>
+          <button type="submit">Consultar</button>
+        </form>
+        <div id="resultado-consultar" class="resultado" hidden></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
