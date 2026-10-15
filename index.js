@@ -75,6 +75,59 @@ app.post("/solicitudes", async (req, res) => {
   res.status(500).json({ error: "No se pudo generar un código único, intentá de nuevo." });
 });
 
+const CAMPOS_PUBLICOS = "codigo_seguimiento, nombre, contacto, fecha_hora, estado, creado_en";
+
+function noEncontrada(res, codigo) {
+  return res
+    .status(404)
+    .json({ error: `No existe ninguna solicitud con el código ${codigo}. Revisá que esté bien escrito.` });
+}
+
+app.get("/solicitudes/:codigo", async (req, res) => {
+  if (!supabase) {
+    return res.status(500).json({ error: "El servidor no tiene configurado Supabase." });
+  }
+
+  const codigo = req.params.codigo.trim().toUpperCase();
+  const { data, error } = await supabase
+    .from("solicitudes")
+    .select(CAMPOS_PUBLICOS)
+    .eq("codigo_seguimiento", codigo)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error al consultar la solicitud:", error);
+    return res.status(500).json({ error: "No se pudo consultar la solicitud." });
+  }
+  if (!data) {
+    return noEncontrada(res, codigo);
+  }
+  res.json(data);
+});
+
+app.patch("/solicitudes/:codigo/confirmar", async (req, res) => {
+  if (!supabase) {
+    return res.status(500).json({ error: "El servidor no tiene configurado Supabase." });
+  }
+
+  const codigo = req.params.codigo.trim().toUpperCase();
+  const { data, error } = await supabase
+    .from("solicitudes")
+    .update({ estado: "confirmada" })
+    .eq("codigo_seguimiento", codigo)
+    .select(CAMPOS_PUBLICOS)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error al confirmar la solicitud:", error);
+    return res.status(500).json({ error: "No se pudo confirmar la solicitud." });
+  }
+  if (!data) {
+    return noEncontrada(res, codigo);
+  }
+  res.json(data);
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
